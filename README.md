@@ -1,18 +1,18 @@
 # Elements
 A JavaScript Library for things I use often, as well as some helper functions. Full documentation below.
 
-Inspired by [Habitat](https://github.com/l2wilson94/Habitat), another library that I've help out with!
+Inspired by [Habitat](https://github.com/l2wilson94/Habitat), another library that I help out with!
 
 ## Installing
-You can embed it into the browser like this: (I don't really use Modules often, but when I get into it, I'll convert this over too)
+You can embed it into the browser like this: (I don't really use Modules, but I can convert this over to one if I ever see the need to)
 ```html
-<script src="elements.js"></script>
+<script src="Elements.js"></script>
 ```
 
 ## Initialisation
 You _can_ just use every function out-of-the-box, like so:
 ```js
-new Elements.Colour() // or any other function
+Elements.Math.clamp() // or any other function
 ```
 But you can also install the entire library into the `window` object. For instance:
 ```js
