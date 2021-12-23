@@ -10,7 +10,7 @@ const Elements = {};
     if (Elements.installed) return;
     
     if (!Elements.Colour.installed) Elements.Colour.install(global);
-    if (!Elements.Colour.installed) Elements.Math.install(global);
+    if (!Elements.Limit.installed) Elements.Limit.install(global);
     
     Elements.installed = true;
   }
@@ -161,7 +161,11 @@ const Elements = {};
   Elements.Colour.rgb2cmy = Elements.Colour.cmy2rgb;
   
   Elements.Colour.install = function (global) {
-    global.Colour = Elements.Colour;
+    global.Colour ??= Elements.Colour;
+    global.Colour.rgb2hsl ??= Elements.Colour.rgb2hsl;
+    global.Colour.hsl2rgb ??= Elements.Colour.hsl2rgb;
+    global.Colour.rgb2cmy ??= Elements.Colour.rgb2cmy;
+    global.Colour.cmy2rgb ??= Elements.Colour.cmy2rgb;
     Elements.Colour.installed = true;
   };
 }
@@ -172,12 +176,34 @@ const Elements = {};
  */
 
 {
-  Elements.Math = {};
+  Elements.Limit = {};
   
-  Elements.Math.clamp = (n, a, b) => Math.min(Math.max(a, n), b);
+  Elements.Limit.clamp = (n, a, b) => {
+    if (b < a) return Elements.Limit.clamp(n, b, a);
+    if (n < a) return a;
+    if (n > b) return b;
+    return n;
+  };
+  Elements.Limit.wrap = (n, a, b) => {
+    if (b < a) return Elements.Limit.wrap(n, b, a);
+    return (n - a) % (b - a) + a;
+  };
+  Elements.Limit.fold = (n, a, b) => {
+    if (b < a) return Elements.Limit.fold(n, b, a);
+    let N = (x - a) % (2 * (b - a)) + a;
+    if (N > b) return 2 * b - N;
+    return N;
+  };
+  Elements.Limit.sigmoid = (n, a, b) => {
+    if (b < a) return Elements.Limit.sigmoid(n, b, a);
+    return (b - a) / (1 + Math.exp(4 * (a - n) / (b - a) + 2)) + a;
+  };
   
-  Elements.Math.install = function (global) {
-    global.Math.clamp = Elements.Math.clamp;
-    Elements.Math.installed = true;
+  Elements.Limit.install = function (global) {
+    global.Limit ??= Elements.Limit;
+    global.Limit.clamp ??= Elements.Limit.clamp;
+    global.Limit.wrap ??= Elements.Limit.wrap;
+    global.Limit.fold ??= Elements.Limit.fold;
+    Elements.Limit.installed = true;
   };
 }
