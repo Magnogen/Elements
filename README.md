@@ -78,7 +78,16 @@ Limit.wrap(number, low, high)
 ```
 ![Wrap Graph](https://user-images.githubusercontent.com/25611707/147256614-a646cdac-544b-469d-a030-acd28c7fa96c.png)
 
-The `wrap()` function is a modified version of the modulo (%) operator
+The `wrap()` function is a modified version of the modulo (%) operator - but with one key difference:
+```js
+-1 % 10 // gives -1
+Limit.wrap(-1, 0, 10) // gives 9 - properly between 0 and 10
+```
+I'm thinking of doing an alternate version that swaps the upper and lower bounds, something like:
+```js
+Limit.wrap(0, 0, 10) // gives 0, but
+Limit.awrap(0, 0, 10) // would give 10
+```
 
 #### Fold
 ```js
