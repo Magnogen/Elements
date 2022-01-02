@@ -41,6 +41,10 @@ const Elements = {};
   }
   Elements.Colour.prototype = { r: 0, g: 0, b: 0, a: 255, isElementColour: true }
   
+  Elements.Colour.prototype.render = function (type='rgba') {
+    return `rgba(${this.rgba.map(Math.round).join(', ')})`;
+  }
+  
   Reflect.defineProperty(Elements.Colour.prototype, 'rgb', {
     get() { return [this.r, this.g, this.b] },
     set(...data) { this.rgba = [data, this.a] },
@@ -186,11 +190,13 @@ const Elements = {};
   };
   Elements.Limit.wrap = (n, a, b) => {
     if (b < a) return Elements.Limit.wrap(n, b, a);
-    return (n - a) % (b - a) + a;
+    if (n < a) return Elements.Limit.wrap(n+b-a, a, b);
+    if (n > b) return Elements.Limit.wrap(n-b-a, a, b);
+    return n;
   };
   Elements.Limit.fold = (n, a, b) => {
     if (b < a) return Elements.Limit.fold(n, b, a);
-    let N = (x - a) % (2 * (b - a)) + a;
+    let N = (n - a) % (2 * (b - a)) + a;
     if (N > b) return 2 * b - N;
     return N;
   };
