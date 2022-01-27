@@ -54,7 +54,7 @@ let t three  = 3
 let v Void   = [0, 0, 0]
 let   Black  = [0, 0, 0]
 let g Grey   = [1, 1, 2]
-let s Silver - [5, 5, 6]
+let s Silver = [5, 5, 6]
 let w White  = [8, 8, 8]
 let   Green  = [2, 9, 3]
 let r Red    = [9, 1, 1]
