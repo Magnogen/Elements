@@ -1,5 +1,5 @@
 Elements.install(this)
-Habitat.Colour.install(this)
+Habitat.Colour.install(this) // https://github.com/TodePond/Habitat
 
 let bodybg =      Colour.Void.rgb
 let bodytxt =     Colour.White.rgb
