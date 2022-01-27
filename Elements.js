@@ -11,6 +11,7 @@ const Elements = {};
     
     if (!Elements.Colour.installed) Elements.Colour.install(global);
     if (!Elements.Limit.installed) Elements.Limit.install(global);
+    if (!Elements.Meal.installed) Elements.Meal.install(global);
     
     Elements.installed = true;
   }
@@ -174,7 +175,7 @@ const Elements = {};
   };
 }
 
-/* Math
+/* Limit
  *   Restricting numbers between two values
  *   Clamp is supported
  */
@@ -211,5 +212,100 @@ const Elements = {};
     global.Limit.wrap ??= Elements.Limit.wrap;
     global.Limit.fold ??= Elements.Limit.fold;
     Elements.Limit.installed = true;
+  };
+}
+
+{
+  Elements.Meal = class Meal {
+    constructor(plate) {
+      this.plate = plate;
+      this.index  = 0; // \
+      this.line   = 0; // |- none of these work yet, but i'd like them to
+      this.column = 0; // /
+    }
+    finished() { return this.plate.length == 0; }
+    first(check) {
+      if (this.finished()) return;
+      if (typeof check == 'string') return this.plate.startsWith(check);
+      if (typeof check == 'number') return this.plate.substring(0, check + 1);
+      if (typeof check == 'undefined') return this.plate[0];
+    }
+    eat(strings) {
+      if (typeof strings == 'string') {
+        if (!this.first(strings)) return null;
+        this.plate = this.plate.slice(strings.length);
+        return strings;
+      }
+      else if (typeof strings == 'function') {
+        let copy = new Elements.Meal(this.plate),
+            out = strings(copy);
+        if (out == null) return null;
+        this.plate = copy.plate;
+        return out;
+      }
+    }
+  }
+  Elements.Meal.any = (...edibles) => food => {
+    for (let edible of edibles) {
+      let value = food.eat(edible);
+      if (value != null) return value;
+    }
+    return null;
+  }
+  Elements.Meal.around = (edible, start, end) => food => {
+    let value = food.eat(edible);
+    if (value == null) return null;
+    return start + value + end;
+  }
+  Elements.Meal.chain = (...edibles) => food => {
+    let content = '', current;
+    for (let edible of edibles) {
+      current = food.eat(edible)
+      if (current == null) return null;
+      else content += current;
+    }
+    return content;
+  }
+  Elements.Meal.many = edible => food => {
+    let content = null, current = food.eat(edible);
+    while (current != null) {
+      if (content == null) content = '';
+      content += current;
+      current = food.eat(edible);
+    }
+    return content;
+  }
+  Elements.Meal.upto = edible => food => {
+    let content = '';
+    while (!food.first(edible)) {
+      content += food.eat(food.first());
+      if (food.finished())
+        if (content) return content;
+        else return null;
+    }
+    if (content) return content;
+    else return '';
+  }
+  Elements.Meal.maybe = edible => food => food.eat(edible) ?? '';
+  Elements.Meal.ignore = edible => food => food.eat(edible) == null ? null : '';
+  Elements.Meal._ = food => food.eat(Elements.Meal.maybe(
+    Elements.Meal.many(Elements.Meal.any(' ', '\t'))
+  ));
+  Elements.Meal.__ = food => food.eat(
+    Elements.Meal.many(Elements.Meal.any(' ', '\t'))
+  );
+  Elements.Meal.install = function (global) {
+    global.Meal        ??= Elements.Meal;
+    global.Meal.any    ??= Elements.Meal.any;    // \
+    global.Meal.around ??= Elements.Meal.around; // |
+    global.Meal.chain  ??= Elements.Meal.chain;  // |- Fundamentals
+    global.Meal.many   ??= Elements.Meal.many;   // |
+    global.Meal.upto   ??= Elements.Meal.upto;   // /
+    
+    global.Meal.ignore ??= Elements.Meal.ignore; // \
+    global.Meal.maybe  ??= Elements.Meal.maybe;  // |- Helpers
+    global.Meal._      ??= Elements.Meal._;      // |
+    global.Meal.__     ??= Elements.Meal.__;     // /
+    Elements.Meal.installed = true;
   };
 }

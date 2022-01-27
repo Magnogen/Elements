@@ -106,3 +106,7 @@ Limit.sigmoid(number, low, high)
 ![Sigmoid Graph](https://user-images.githubusercontent.com/25611707/147257188-8cc356ce-ab7a-4782-a435-cec61dda8e8a.png)
 
 The `sigmoid()` function is a modified version of a relatively well known mathematical function, widely used as an activator function in the field of AI, I haven't actually used it yet, but I thought it'd be a bit cool to play around with it in a future project
+
+### TODO: Meal
+#### TODO: Make this organised, currently all the docs are in the same file :/
+Maybe a `/docs/` folder?

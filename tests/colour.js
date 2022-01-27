@@ -13,8 +13,3 @@ console.log('peach', peach.hsl)
 // a cute peach colour lmao
 document.body.style.backgroundColor = `rgba(${peach.r}, ${peach.g}, ${peach.b}, ${peach.a})`
 
-console.log(Limit.sigmoid(-Infinity, 0, 1)) // 0
-console.log(Limit.sigmoid(0, 0, 1)) // 0.1192...
-console.log(Limit.sigmoid(0.5, 0, 1)) // 0.5
-console.log(Limit.sigmoid(1, 0, 1)) //0.8807...
-console.log(Limit.sigmoid(Infinity, 0, 1)) // 1
