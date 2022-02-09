@@ -218,6 +218,7 @@ const Elements = {};
 {
   Elements.Meal = class Meal {
     constructor(plate) {
+      if (typeof plate != 'string') err()
       this.plate = plate;
       this.index  = 0; // \
       this.line   = 0; // |- none of these work yet, but i'd like them to
@@ -226,7 +227,9 @@ const Elements = {};
     finished() { return this.plate.length == 0; }
     first(check) {
       if (this.finished()) return;
-      if (typeof check == 'string') return this.plate.startsWith(check);
+      if (typeof check == 'string') {
+        return this.plate.startsWith(check);
+      }
       if (typeof check == 'number') return this.plate.substring(0, check + 1);
       if (typeof check == 'undefined') return this.plate[0];
     }
@@ -257,23 +260,33 @@ const Elements = {};
     if (value == null) return null;
     return start + value + end;
   }
+  Elements.Meal.map = (edible, mapper) => food => {
+    let value = food.eat(edible);
+    if (value == null) return null;
+    if (Array.isArray(value)) return mapper(...value);
+    return mapper(value);
+  };
   Elements.Meal.chain = (...edibles) => food => {
-    let content = '', current;
+    let content = [], current, string = true;
     for (let edible of edibles) {
       current = food.eat(edible)
       if (current == null) return null;
-      else content += current;
+      else {
+        if (typeof current != 'string') string = false;
+        content.push(current);
+      }
     }
-    return content;
+    return string ? content.join('') : content;
   }
   Elements.Meal.many = edible => food => {
-    let content = null, current = food.eat(edible);
+    let content = [], current = food.eat(edible), string = true;
     while (current != null) {
-      if (content == null) content = '';
-      content += current;
+      if (typeof current != 'string') string = false;
+      content.push(current);
       current = food.eat(edible);
     }
-    return content;
+    if (content.length == 0) return null;
+    return string ? content.join('') : content;
   }
   Elements.Meal.upto = edible => food => {
     let content = '';
