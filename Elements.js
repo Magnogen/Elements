@@ -299,7 +299,7 @@ const Elements = {};
     if (content) return content;
     else return '';
   }
-  Elements.Meal.maybe = edible => food => food.eat(edible) ?? '';
+  Elements.Meal.maybe = edible => food => (food.eat(edible) ?? '');
   Elements.Meal.ignore = edible => food => food.eat(edible) == null ? null : '';
   Elements.Meal._ = food => food.eat(Elements.Meal.maybe(
     Elements.Meal.many(Elements.Meal.any(' ', '\t'))
