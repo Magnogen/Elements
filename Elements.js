@@ -217,9 +217,10 @@ const Elements = {};
 
 {
   Elements.Meal = class Meal {
-    constructor(plate) {
+    constructor(plate, { tokensOnly = false } = {}) {
       if (typeof plate != 'string') err()
       this.plate = plate;
+      this.tokensOnly = tokensOnly
       this.index  = 0; // \
       this.line   = 0; // |- none of these work yet, but i'd like them to
       this.column = 0; // /
@@ -233,60 +234,67 @@ const Elements = {};
       if (typeof check == 'number') return this.plate.substring(0, check + 1);
       if (typeof check == 'undefined') return this.plate[0];
     }
-    eat(strings) {
-      if (typeof strings == 'string') {
-        if (!this.first(strings)) return null;
-        this.plate = this.plate.slice(strings.length);
-        return strings;
+    eat(edible) {
+      if (typeof edible == 'string') {
+        if (!this.first(edible)) return null;
+        this.plate = this.plate.slice(edible.length);
+        this.index += edible.length;
+        const splitted = edible.split('\n');
+        this.line += splitted.length - 1;
+        if (splitted.length > 1) this.column = 0
+        this.column += splitted[splitted.length-1].length
+        return edible;
       }
-      else if (typeof strings == 'function') {
-        let copy = new Elements.Meal(this.plate),
-            out = strings(copy);
+      else if (typeof edible == 'function') {
+        const copy = new Elements.Meal(this.plate, { tokensOnly: this.tokensOnly });
+        copy.index = this.index;
+        copy.line = this.line;
+        copy.column = this.column;
+        const out = edible(copy);
         if (out == null) return null;
         this.plate = copy.plate;
+        this.index = copy.index;
+        this.line = copy.line;
+        this.column = copy.column;
         return out;
       }
     }
   }
   Elements.Meal.any = (...edibles) => food => {
     for (let edible of edibles) {
-      let value = food.eat(edible);
+      const value = food.eat(edible);
       if (value != null) return value;
     }
     return null;
   }
   Elements.Meal.around = (edible, start, end) => food => {
-    let value = food.eat(edible);
+    const value = food.eat(edible);
     if (value == null) return null;
     return start + value + end;
   }
   Elements.Meal.map = (edible, mapper) => food => {
-    let value = food.eat(edible);
+    const value = food.eat(edible);
     if (value == null) return null;
     if (Array.isArray(value)) return mapper(...value);
     return mapper(value);
   };
   Elements.Meal.chain = (...edibles) => food => {
-    let content = [], current, string = true;
+    let content = [], current;
     for (let edible of edibles) {
       current = food.eat(edible)
       if (current == null) return null;
-      else {
-        if (typeof current != 'string') string = false;
-        content.push(current);
-      }
+      else content.push(current);
     }
-    return string ? content.join('') : content;
+    return food.tokensOnly ? content : content.join('');
   }
   Elements.Meal.many = edible => food => {
-    let content = [], current = food.eat(edible), string = true;
+    let content = [], current = food.eat(edible);
     while (current != null) {
-      if (typeof current != 'string') string = false;
       content.push(current);
       current = food.eat(edible);
     }
     if (content.length == 0) return null;
-    return string ? content.join('') : content;
+    return food.tokensOnly ? content : content.join('');
   }
   Elements.Meal.upto = edible => food => {
     let content = '';
