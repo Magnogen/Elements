@@ -2,7 +2,7 @@
 const Elements = {};
 
 /* Main installer
- *   for istalling everything into a scope (or technically an object)
+ *   for installing everything into a scope (or technically an object)
  */
 
 {
