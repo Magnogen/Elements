@@ -296,17 +296,9 @@ const Elements = {};
     if (content.length == 0) return null;
     return food.tokensOnly ? content : content.join('');
   }
-  Elements.Meal.upto = edible => food => {
-    let content = '';
-    while (!food.first(edible)) {
-      content += food.eat(food.first());
-      if (food.finished())
-        if (content) return content;
-        else return null;
-    }
-    if (content) return content;
-    else return '';
-  }
+  Elements.Meal.not = edible => food => food.eat(edible) == null ? food.eat(food.first()) : null;
+  
+  Elements.Meal.upto = edible => food => food.eat(Elements.Meal.many(Elements.Meal.not(edible)))
   Elements.Meal.maybe = edible => food => (food.eat(edible) ?? '');
   Elements.Meal.ignore = edible => food => food.eat(edible) == null ? null : '';
   Elements.Meal._ = food => food.eat(Elements.Meal.maybe(
@@ -321,10 +313,11 @@ const Elements = {};
     global.Meal.around ??= Elements.Meal.around; // |
     global.Meal.chain  ??= Elements.Meal.chain;  // |- Fundamentals
     global.Meal.many   ??= Elements.Meal.many;   // |
-    global.Meal.upto   ??= Elements.Meal.upto;   // /
+    global.Meal.not    ??= Elements.Meal.not;    // /
     
     global.Meal.ignore ??= Elements.Meal.ignore; // \
-    global.Meal.maybe  ??= Elements.Meal.maybe;  // |- Helpers
+    global.Meal.maybe  ??= Elements.Meal.maybe;  // |
+    global.Meal.upto   ??= Elements.Meal.upto;   // |- Helpers
     global.Meal._      ??= Elements.Meal._;      // |
     global.Meal.__     ??= Elements.Meal.__;     // /
     Elements.Meal.installed = true;
