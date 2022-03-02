@@ -38,8 +38,15 @@ const Elements = {};
         this.rgba = type.rgba;
       }
     }
-    toRGB() { return `rgba(${this.rgba.map(Math.round).join(', ')})` }
-    toHex() { return `#${this.r.toString(16)}${this.g.toString(16)}${this.b.toString(16)}${this.a.toString(16)}` }
+    toRGB() { return `rgba(${this.rgba.map(Math.floor).join(', ')})` }
+    toHex() {
+      let hex = '#';
+      hex += (0|this.r).toString(16);
+      hex += (0|this.g).toString(16);
+      hex += (0|this.b).toString(16);
+      hex += (0|this.a).toString(16);
+      return hex
+    }
     get rgb() { return [this.r, this.g, this.b] }
     set rgb(data) { this.rgba = [data, this.a] }
     get rgba() { return [...this.rgb, this.a] }
