@@ -23,76 +23,43 @@ const Elements = {};
  */
 
 {
-  Elements.Colour = function (type, ...data) {
-    if (!new.target) throw {
-      name: 'SyntaxError',
-      message: 'Elements.Colour() must be called with new'
-    };
-    if (typeof type === 'string') {
-      if (!['rgb', 'rgba', 'hsl', 'hsla', 'cmy', 'cmya'].includes(type.toLowerCase())) throw {
-        name: 'SyntaxError',
-        message: `Colour type must be of "HSL", "RGB" or "CMY", recieved "${type}"`
-      };
-      if (['hsl', 'hsla'].includes(type)) this.hsla = data;
-      else if (['cmy', 'cmya'].includes(type)) this.cmya = data;
-      else this.rgba = data;
-    } else if (typeof type === 'object' && type.isElementColour) {
-      Object.assign(this, type);
+  Elements.Colour = class Colour {
+    constructor(type, ...data) {
+      this.r = 0; this.g = 0; this.b = 0; this.a = 255;
+      if (typeof type == 'string') {
+        if (!['rgb', 'rgba', 'hsl', 'hsla', 'cmy', 'cmya'].includes(type.toLowerCase())) throw {
+          name: 'SyntaxError',
+          message: `Colour type must be of "HSL", "RGB" or "CMY", recieved "${type}"`
+        }
+        else if (['hsl', 'hsla'].includes(type)) this.hsla = data;
+        else if (['cmy', 'cmya'].includes(type)) this.cmya = data;
+        else this.rgba = data;
+      } else if (typeof type === 'object' && type.isElementColour) {
+        this.rgba = type.rgba;
+      }
     }
-  }
-  Elements.Colour.prototype = { r: 0, g: 0, b: 0, a: 255, isElementColour: true }
-  
-  Elements.Colour.prototype.render = function (type='rgba') {
-    return `rgba(${this.rgba.map(Math.round).join(', ')})`;
-  }
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'rgb', {
-    get() { return [this.r, this.g, this.b] },
-    set(...data) { this.rgba = [data, this.a] },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'rgba', {
-    get() { return [...this.rgb, this.a] },
-    set(..._data) {
+    get rgb() { return [this.r, this.g, this.b] }
+    set rgb(data) { this.rgba = [data, this.a] }
+    get rgba() { return [...this.rgb, this.a] }
+    set rgba(_data) {
       let data = _data.flat(Infinity);
       this.r = data[0]===undefined ? this.r : data[0];
       this.g = data[1]===undefined ? this.g : data[1];
       this.b = data[2]===undefined ? this.b : data[2];
       this.a = data[3]===undefined ? this.a : data[3];
-    },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'h', {
-    get() { return this.hsl[0] },
-    set(hue) { let b4 = this.hsla; this.hsla = [hue, b4[1], b4[2], b4[3]] },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 's', {
-    get() { return this.hsl[1] },
-    set(saturation) { let b4 = this.hsla; this.hsla = [b4[0], saturation, b4[2], b4[3]] },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'l', {
-    get() { return this.hsl[2] },
-    set(lightness) { let b4 = this.hsla; this.hsla = [b4[0], b4[1], lightness, b4[3]] },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'hsl', {
-    get() { return Elements.Colour.rgb2hsl(this.r, this.g, this.b) },
-    set(..._data) {
+    }
+    get h() { return this.hsl[0] }
+    set h(hue) { let b4 = this.hsla; this.hsla = [hue, b4[1], b4[2], b4[3]] }
+    get s() { return this.hsl[1] }
+    set s(saturation) { let b4 = this.hsla; this.hsla = [b4[0], saturation, b4[2], b4[3]] }
+    get l() { return this.hsl[2] }
+    set l(lightness) { let b4 = this.hsla; this.hsla = [b4[0], b4[1], lightness, b4[3]] }
+    get hsl() { return Elements.Colour.rgb2hsl(this.r, this.g, this.b) }
+    set hsl(_data) {
       let data = [...Array(3)].map((e, i)=>_data[i]);
-      this.hsla = [...data, this.a] },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'hsla', {
-    get() { return [...this.hsl, this.a] },
-    set(..._data) {
+      this.hsla = [...data, this.a] }
+    get hsla() { return [...this.hsl, this.a] }
+    set hsla(_data) {
       let data = _data.flat(Infinity);
       let b4 = this.hsl;
       data[0] = data[0] ? data[0] : b4[0];
@@ -103,45 +70,26 @@ const Elements = {};
       this.g = data[1];
       this.b = data[2];
       this.a = data[3]===undefined ? this.a : data[3];
-    },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'c', {
-    get() { return this.cmy[0] },
-    set(cyan) { let b4 = this.cmya; this.cmya = [cyan, b4[1], b4[2], b4[3]] },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'm', {
-    get() { return this.cmy[1] },
-    set(magenta) { let b4 = this.cmya; this.cmya = [b4[0], magenta, b4[2], b4[3]] },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'y', {
-    get() { return this.cmy[2] },
-    set(yellow) { let b4 = this.cmya; this.cmya = [b4[0], b4[1], yellow, b4[3]] },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'cmy', {
-    get() { return [255-this.r, 255-this.g, 255-this.b] },
-    set(...data) { this.cmya = [data, this.a] },
-    configurable: true, enumerable: false
-  });
-  
-  Reflect.defineProperty(Elements.Colour.prototype, 'cmya', {
-    get() { return [...this.cmy, this.a] },
-    set(..._data) {
+    }
+    get c() { return this.cmy[0] }
+    set c(cyan) { let b4 = this.cmya; this.cmya = [cyan, b4[1], b4[2], b4[3]] }
+    get m() { return this.cmy[1] }
+    set m(magenta) { let b4 = this.cmya; this.cmya = [b4[0], magenta, b4[2], b4[3]] }
+    get y() { return this.cmy[2] }
+    set y(yellow) { let b4 = this.cmya; this.cmya = [b4[0], b4[1], yellow, b4[3]] }
+    get cmy() { return [255-this.r, 255-this.g, 255-this.b] }
+    set cmy(data) { this.cmya = [data, this.a] }
+    get cmya() { return [...this.cmy, this.a] }
+    set cmya(_data) {
       let data = _data.flat(Infinity);
       this.r = data[0]===undefined ? this.r : 255-data[0];
       this.g = data[1]===undefined ? this.g : 255-data[1];
       this.b = data[2]===undefined ? this.b : 255-data[2];
       this.a = data[3]===undefined ? this.a : data[3];
-    },
-    configurable: true, enumerable: false
-  });
+    }
+    
+    render() { return `rgba(${this.rgba.map(Math.round).join(', ')})` }
+  }
   
   // rgb2hsl() and hsl2rgb() adapted from Kamil Kiełczewski's answer from StackOverflow
   // https://stackoverflow.com/a/64090995
