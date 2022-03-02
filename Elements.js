@@ -38,6 +38,8 @@ const Elements = {};
         this.rgba = type.rgba;
       }
     }
+    toRGB() { return `rgba(${this.rgba.map(Math.round).join(', ')})` }
+    toHex() { return `#${this.r.toString(16)}${this.g.toString(16)}${this.b.toString(16)}${this.a.toString(16)}` }
     get rgb() { return [this.r, this.g, this.b] }
     set rgb(data) { this.rgba = [data, this.a] }
     get rgba() { return [...this.rgb, this.a] }
@@ -87,8 +89,6 @@ const Elements = {};
       this.b = data[2]===undefined ? this.b : 255-data[2];
       this.a = data[3]===undefined ? this.a : data[3];
     }
-    
-    render() { return `rgba(${this.rgba.map(Math.round).join(', ')})` }
   }
   
   // rgb2hsl() and hsl2rgb() adapted from Kamil Kiełczewski's answer from StackOverflow
