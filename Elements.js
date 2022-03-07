@@ -183,9 +183,7 @@ const Elements = {};
     finished() { return this.plate.length == 0; }
     first(check) {
       if (this.finished()) return;
-      if (typeof check == 'string') {
-        return this.plate.startsWith(check);
-      }
+      if (typeof check == 'string') return this.plate.startsWith(check);
       if (typeof check == 'number') return this.plate.substring(0, check + 1);
       if (typeof check == 'undefined') return this.plate[0];
     }
