@@ -176,9 +176,9 @@ const Elements = {};
       if (typeof plate != 'string') err()
       this.plate = plate;
       this.tokensOnly = tokensOnly
-      this.index  = 0; // \
-      this.line   = 0; // |- none of these work yet, but i'd like them to
-      this.column = 0; // /
+      this.index  = 0;
+      this.line   = 0;
+      this.column = 0;
     }
     finished() { return this.plate.length == 0; }
     first(check) {
