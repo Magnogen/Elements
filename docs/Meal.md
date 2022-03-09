@@ -174,7 +174,7 @@ The examples are as follows, you can eat them bys simply eating the variable the
 - Strings, with escape-able quotes
 
   ```js
-  const string = food => food.eat(
+  const STRING = food => food.eat(
       chain(
           '"',
           many( any(
