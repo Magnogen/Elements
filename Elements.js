@@ -132,7 +132,7 @@ const Elements = {};
 
 /* Limit
  *   Restricting numbers between two values
- *   Clamp is supported
+ *   Clamp, Wrap, Fold and Sigmoid are supported
  */
 
 {
@@ -225,12 +225,6 @@ const Elements = {};
     if (value == null) return null;
     return start + value + end;
   }
-  Elements.Meal.map = (edible, mapper) => food => {
-    const value = food.eat(edible);
-    if (value == null) return null;
-    if (Array.isArray(value)) return mapper(...value);
-    return mapper(value);
-  };
   Elements.Meal.chain = (...edibles) => food => {
     let content = [], current;
     for (let edible of edibles) {
@@ -249,11 +243,17 @@ const Elements = {};
     if (content.length == 0) return null;
     return food.tokensOnly ? content : content.join('');
   }
+  Elements.Meal.map = (edible, mapper) => food => {
+    const value = food.eat(edible);
+    if (value == null) return null;
+    if (Array.isArray(value)) return mapper(...value);
+    return mapper(value);
+  };
   Elements.Meal.not = edible => food => food.eat(edible) == null ? food.eat(food.first()) : null;
   
-  Elements.Meal.upto = edible => food => food.eat(Elements.Meal.many(Elements.Meal.not(edible)))
+  Elements.Meal.ignore = edible => food => food.eat(edible) == null ? null : ''; 
   Elements.Meal.maybe = edible => food => (food.eat(edible) ?? '');
-  Elements.Meal.ignore = edible => food => food.eat(edible) == null ? null : '';
+  Elements.Meal.upto = edible => food => food.eat(Elements.Meal.many(Elements.Meal.not(edible))); 
   Elements.Meal._ = food => food.eat(Elements.Meal.maybe(
     Elements.Meal.many(Elements.Meal.any(' ', '\t'))
   ));
@@ -266,6 +266,7 @@ const Elements = {};
     global.Meal.around ??= Elements.Meal.around; // |
     global.Meal.chain  ??= Elements.Meal.chain;  // |- Fundamentals
     global.Meal.many   ??= Elements.Meal.many;   // |
+    global.Meal.map    ??= Elements.Meal.map;    // |
     global.Meal.not    ??= Elements.Meal.not;    // /
     
     global.Meal.ignore ??= Elements.Meal.ignore; // \
