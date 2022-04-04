@@ -234,6 +234,14 @@ const Elements = {};
     }
     return food.tokensOnly ? content : content.join('');
   }
+  Elements.Meal.error = (edible, messenger) => food => {
+    const content = food.eat(edible)
+    if (content == null) throw {
+      name: 'ElementsMealError',
+      message: typeof messenger == 'function' ? messenger(food) : messenger
+    };
+    return content;
+  };
   Elements.Meal.many = edible => food => {
     let content = [], current = food.eat(edible);
     while (current != null) {
@@ -264,7 +272,8 @@ const Elements = {};
     global.Meal        ??= Elements.Meal;
     global.Meal.any    ??= Elements.Meal.any;    // \
     global.Meal.around ??= Elements.Meal.around; // |
-    global.Meal.chain  ??= Elements.Meal.chain;  // |- Fundamentals
+    global.Meal.chain  ??= Elements.Meal.chain;  // |
+    global.Meal.error  ??= Elements.Meal.error;  // |- Fundamentals
     global.Meal.many   ??= Elements.Meal.many;   // |
     global.Meal.map    ??= Elements.Meal.map;    // |
     global.Meal.not    ??= Elements.Meal.not;    // /
