@@ -164,7 +164,7 @@ Like `Meal._`, but it's not optional - writing it out yourself, it'd be `many( a
 Here are some examples for edibles that can be used in certain circumstances. They make use of the helper functions, so you can assume that each snippet starts with this:
 
 ```js
-const { any, chain, many, not } = Elements.Meal;
+const { any, chain, many, maybe, not } = Elements.Meal;
 ```
 
 You can use that to quickly get all the functions out of the Meal namespace. If you want to get more information on it, it's called [Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#object_destructuring).
@@ -177,10 +177,10 @@ The examples are as follows, you can eat them bys simply eating the variable the
   const STRING = food => food.eat(
       chain(
           '"',
-          many( any(
+          maybe( many( any(
               '\\"', 
               not( '"' )
-          ) ),
+          ) ) ),
           '"'
       )
   )
