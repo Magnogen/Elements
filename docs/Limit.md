@@ -5,6 +5,9 @@
 ```js
 Elements.Limit.clamp(number, low, high)
 Limit.clamp(number, low, high)
+
+const my_bound = new Elements.Limit(low, high)
+my_bound.clamp(number)
 ```
 
 ![Clamp Graph](https://user-images.githubusercontent.com/25611707/147256564-1a441c7c-f117-444c-8496-1e7134d06e01.png)
@@ -16,6 +19,9 @@ The `clamp()` function returns the number but restricted between `low` and `high
 ```js
 Elements.Limit.wrap(number, low, high)
 Limit.wrap(number, low, high)
+
+const my_bound = new Elements.Limit(low, high)
+my_bound.wrap(number)
 ```
 
 ![Wrap Graph](https://user-images.githubusercontent.com/25611707/147256614-a646cdac-544b-469d-a030-acd28c7fa96c.png)
@@ -39,6 +45,9 @@ Limit.awrap(0, 0, 10) // would give 10
 ```js
 Elements.Limit.fold(number, low, high)
 Limit.fold(number, low, high)
+
+const my_bound = new Elements.Limit(low, high)
+my_bound.fold(number)
 ```
 
 ![Fold Graph](https://user-images.githubusercontent.com/25611707/147256972-7b3cb09e-e083-4a75-a6f5-5f8190917b4b.png)
@@ -50,6 +59,9 @@ The `fold()` function is like `wrap()`, but is more continuous, and actually pro
 ```js
 Elements.Limit.sigmoid(number, low, high)
 Limit.sigmoid(number, low, high)
+
+const my_bound = new Elements.Limit(low, high)
+my_bound.sigmoid(number)
 ```
 
 ![Sigmoid Graph](https://user-images.githubusercontent.com/25611707/147257188-8cc356ce-ab7a-4782-a435-cec61dda8e8a.png)
