@@ -32,17 +32,4 @@ These are all the values you can change and obtain in a Colour object:
 
 - `.cmy`, `.cmya`: all the CMY channels, excluding alpha for cmy, as a list
 
-- `.isElementColour`: for determining if an object is a colour defined by this constructor (I'll probably change this to work better in future)
-
-There are other helper functions under the `Colour` namespace - they include converters between RGB, HSL and CMY colour systems - and are used in the creation of colours. You can use them like so:
-
-```js
-Elements.Colour.rgb2hsl(red, green, blue) // returns list [hue, saturation, lightness]
-Elements.Colour.hsl2rgb(hue, saturation, lightness) // returns list [red, green, blue]
-Elements.Colour.rgb2cmy(red, green, blue) // returns list [cyan, magenta, yellow]
-Elements.Colour.cmy2rgb(cyan, magenta, yellow) // returns list [red, green, blue]
-```
-
-I'll probably also do `hsl2cmy` and `cmy2hsl`, but I wouldn't know where to start with that yet.
-
-Credit to [Kamil Kiełczewski on StackOverflow](https://stackoverflow.com/a/64090995) for the `hsl2rgb` and `rgb2hsl` functions
+Credit to [Kamil Kiełczewski on StackOverflow](https://stackoverflow.com/a/64090995) for the `hsl2rgb` and `rgb2hsl` functions.
