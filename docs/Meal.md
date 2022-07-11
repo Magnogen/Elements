@@ -169,7 +169,7 @@ const { any, chain, many, maybe, not } = Elements.Meal;
 
 You can use that to quickly get all the functions out of the Meal namespace. If you want to get more information on it, it's called [Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#object_destructuring).
 
-The examples are as follows, you can eat them bys simply eating the variable the snippet creates:
+The examples are as follows, you can eat them by simply eating the variable the snippet creates:
 
 - Strings, with escape-able quotes
 
@@ -186,4 +186,4 @@ The examples are as follows, you can eat them bys simply eating the variable the
   )
   ```
 
-I'll give some more later, let me know if you come up with some interesting use cases!
+I'll give some more later, let me know if you come up with some interesting ideas!
