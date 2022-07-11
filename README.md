@@ -26,16 +26,16 @@ You _can_ just use every function out-of-the-box, like so:
 Elements.Limit.clamp() // or any other function
 ```
 
-But you can also install the entire library into the `window` object. For instance:
+But you can also install bits of the library into the global domain. For instance:
 
 ```js
-Elements.install(window) // or you can use .install(this) in a browser
+const { Colour, Meal } = Elements
 ```
 
-You can also install specific parts of the library, like so:
+You can also easily rename them to be whatever you like!
 
 ```js
-Elements.Colour.install(window) // or you can use .install(this) in a browser
+const { Colour: col, Meal: lang } = Elements
 ```
 
 ## Documentation
