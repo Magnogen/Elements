@@ -178,7 +178,7 @@ const Elements = {};
       if (typeof check == 'undefined')
         return this.plate[this.index];
     }
-    eat(edible) {
+    eat(edible, tokensOnly=this.tokensOnly) {
       if (typeof edible == 'string') {
         if (!this.first(edible)) return null;
         this.index += edible.length;
@@ -189,7 +189,7 @@ const Elements = {};
         return edible;
       }
       else if (typeof edible == 'function') {
-        const copy = new Elements.Meal(this.plate, { tokensOnly: this.tokensOnly });
+        const copy = new Elements.Meal(this.plate, tokensOnly );
         copy.index = this.index;
         copy.line = this.line;
         copy.column = this.column;
