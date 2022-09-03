@@ -12,12 +12,6 @@ You can embed it into the browser like this: (I don't really use Modules, but I 
 <script src="Elements.js"></script>
 ```
 
-Or you can use my API: (this is still WIP, but it'll work for the time being)
-
-```html
-<script src="https://api.magnogen.net/elem"></script>
-```
-
 ## Initialisation
 
 You _can_ just use every function out-of-the-box, like so:
