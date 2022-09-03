@@ -4,9 +4,9 @@ A JavaScript Library for things I use often, as well as some helper functions. F
 
 Inspired by [Habitat](https://github.com/l2wilson94/Habitat), another library that I help out with!
 
-## Installing
+## Installation
 
-You can embed it into the browser like this: (I don't really use Modules, but I can convert this over to one if I ever see the need to)
+You can embed it into the browser like this: (I don't really use Modules, but I can convert this over to one if I ever need it)
 
 ```html
 <script src="Elements.js"></script>
