@@ -189,12 +189,12 @@ const Elements = {};
         return edible;
       }
       else if (typeof edible == 'function') {
-        const copy = new Elements.Meal(this.plate, tokensOnly );
+        const copy = new Elements.Meal(this.plate, tokensOnly);
         copy.index = this.index;
         copy.line = this.line;
         copy.column = this.column;
         const out = edible(copy);
-        if (out == null) return null;
+        if (out === null) return null;
         this.index = copy.index;
         this.line = copy.line;
         this.column = copy.column;
@@ -238,6 +238,15 @@ const Elements = {};
     if (Array.isArray(value)) return mapper(...value);
     return mapper(value);
   };
+  Elements.Meal.n = (edible, amount) => food => {
+    let content = [], current = food.eat(edible);
+    for (let i = 0; i < amount; i++) {
+      if (current === null) return null;
+      content.push(current);
+      current = food.eat(edible);
+    }
+    return food.tokensOnly ? content : content.join('');
+  }
   Elements.Meal.need = (edible, messenger) => food => {
     const content = food.eat(edible)
     if (content == null) throw {
@@ -254,11 +263,11 @@ const Elements = {};
   Elements.Meal._ = food => {
     const out = food.eat( Elements.Meal.maybe(Elements.Meal.many(Elements.Meal.any(' ','\t'))) );
     if (out === null) return null;
-    return food.tokensOnly ? out.join('') : out;
+    return food.tokensOnly ? out : out.join('');
   }
   Elements.Meal.__ = food => {
     const out = food.eat( Elements.Meal.many(Elements.Meal.any(' ', '\t')) );
     if (out === null) return null;
-    return food.tokensOnly ? out.join('') : out;
+    return food.tokensOnly ? out : out.join('');
   }
 }
