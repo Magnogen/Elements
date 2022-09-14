@@ -271,3 +271,45 @@ const Elements = {};
     return food.tokensOnly ? out : out.join('');
   }
 }
+
+// Thread
+//   Multiple things in sort of parallel
+//   Support for asynchronous frames and things
+
+{
+  let threads = [];
+  Elements.Thread = class Thread {
+    constructor(generator=function*(){yield;}) {
+      this.content = generator(this);
+      this.complete = false;
+      this.task_complete = false;
+    }
+    start() { threads.push(this); }
+  };
+  Elements.Thread.frame = Symbol.for('Elements.Thread.frame');
+  Elements.Thread.stop = Symbol.for('Elements.Thread.stop');
+  
+  (async () => {
+    while (true) {
+      let last = performance.now();
+      for (let thread of threads) thread.task_complete = false;
+      while (performance.now() - last < 1000/60) {
+        for (let self of threads) {
+          if (self.complete || self.task_complete) continue;
+          const next = await self.content.next();
+          if (next.done)
+            self.complete = true;
+          else if (next.value == Elements.Thread.frame)
+            self.task_complete = true;
+          else if (next.value == Elements.Thread.stop)
+            self.complete = true;
+          else if (next.value == undefined);
+          else if (typeof next.value == 'string')
+            console.log(`%c ~ ${next.value} `, 'color: #ff0');
+          else console.log(`%c ~ `, 'color: #ff0', next.value);
+        }
+      }
+      await new Promise(requestAnimationFrame);
+    }
+  })();
+}
