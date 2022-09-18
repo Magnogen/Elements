@@ -66,7 +66,7 @@ food.eat((copy) => { // this might seem long, but don't worry - I've split it up
       result += current;
       current = food.eat('l');
     }
-    if (content.length < 2) return null; // Make sure its at least two 'l's
+    if (current.length < 2) return null; // Make sure its at least two 'l's
 
     current = food.eat('o'); // Eat an 'o'
     if (current == null) return null;
