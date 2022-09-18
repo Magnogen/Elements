@@ -290,26 +290,32 @@ const Elements = {};
   Elements.Thread.stop = Symbol.for('Elements.Thread.stop');
   
   (async () => {
+    // forever try and compute threads
     while (true) {
       let last = performance.now();
+      // mark every running thread as ready to compute
       for (let thread of threads) thread.task_complete = false;
+      // compute as many threads as possible in a frame
       while (performance.now() - last < 1000/60) {
         for (let self of threads) {
+          // if there's nothing left of the thread
+          // or if it asked to wait 'till the next frame (end of task)
           if (self.complete || self.task_complete) continue;
+          // compute next part of thread, allowing for async
           const next = await self.content.next();
-          if (next.done)
+          if (next.done) // generator done means thread is done
             self.complete = true;
-          else if (next.value == Elements.Thread.frame)
+          else if (next.value == Elements.Thread.frame) // thread asks to wait a frame
             self.task_complete = true;
-          else if (next.value == Elements.Thread.stop)
+          else if (next.value == Elements.Thread.stop) // thread asks to prematurely end thread
             self.complete = true;
-          else if (next.value == undefined);
-          else if (typeof next.value == 'string')
+          else if (next.value == undefined); // ignore undefinedness
+          else if (typeof next.value == 'string') // log a string if yielded
             console.log(`%c ~ ${next.value} `, 'color: #ff0');
-          else console.log(`%c ~ `, 'color: #ff0', next.value);
+          else console.log(`%c ~ `, 'color: #ff0', next.value); // log anything else if yielded
         }
       }
-      await new Promise(requestAnimationFrame);
+      await new Promise(requestAnimationFrame); // wait a frame
     }
   })();
 }
