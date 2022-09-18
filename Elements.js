@@ -303,16 +303,22 @@ const Elements = {};
           if (self.complete || self.task_complete) continue;
           // compute next part of thread, allowing for async
           const next = await self.content.next();
-          if (next.done) // generator done means thread is done
+          // generator done means thread is done
+          if (next.done)
             self.complete = true;
-          else if (next.value == Elements.Thread.frame) // thread asks to wait a frame
+          // thread asks to wait a frame
+          else if (next.value == Elements.Thread.frame)
             self.task_complete = true;
-          else if (next.value == Elements.Thread.stop) // thread asks to prematurely end thread
+          // thread asks to prematurely end thread
+          else if (next.value == Elements.Thread.stop)
             self.complete = true;
-          else if (next.value == undefined); // ignore undefinedness
-          else if (typeof next.value == 'string') // log a string if yielded
+          // ignore undefinedness
+          else if (next.value == undefined);
+          // log a yellow string if yielded because yellow is cool
+          else if (typeof next.value == 'string')
             console.log(`%c ~ ${next.value} `, 'color: #ff0');
-          else console.log(`%c ~ `, 'color: #ff0', next.value); // log anything else if yielded
+          // log anything else if yielded
+          else console.log(`%c ~ `, 'color: #ff0', next.value);
         }
       }
       await new Promise(requestAnimationFrame); // wait a frame
