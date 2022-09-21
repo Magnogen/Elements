@@ -335,9 +335,9 @@ const Elements = {};
   Elements.Thread.stop = Symbol.for('Elements.Thread.stop');
   
   (async () => {
-    let last = performance.now();
     // forever try and compute threads
     while (true) {
+      let last = performance.now();
       // mark every running thread as ready to compute
       for (let thread of threads) thread.task_complete = false;
       // compute as many tasks in all threads as possible in a 60th of a second (frame)
