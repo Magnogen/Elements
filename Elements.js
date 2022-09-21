@@ -1,10 +1,17 @@
 // jshint esversion: 11
 const Elements = {};
 
-/* Colour
- *   Creating and editing colours
- *   RGBA, HSLA and CMYA are supported
- */
+// Elements: Magnogen's personal JavaScript Library
+// You can use it too, I like sharing things
+// If you like any of this, or dislike it to the point of wanting to make it better,
+//   please submit a pull request at https://github.com/Magnogen/Elements
+
+// Colour
+//   Creating and editing colours
+//   RGBA, HSLA and CMYA are supported
+//   Might include CNS in future too
+//   https://documentation.sas.com/doc/en/pgmsascdc/9.4_3.5/grstatgraph/p0edl20cvxxmm9n1i9ht3n21eict.htm
+//   ^ Helpful resource
 
 {
   // hsl2rgb() and rgb2hsl() adapted from Kamil Kiełczewski's answer from StackOverflow
@@ -99,10 +106,43 @@ const Elements = {};
   }
 }
 
-/* Limit
- *   Restricting numbers between two values
- *   Clamp, Wrap, Fold and Sigmoid are supported
- */
+// Finite State Machine
+//   all things finite-statey
+
+{
+  Elements.FSM = class FSM {
+    #state;
+    #states;
+    #event_defaults;
+    constructor() {
+      this.#state = undefined;
+      this.#states = {};
+      this.#event_defaults = {};
+    }
+    addState(name) {
+      if (this.#state == undefined) this.#state = name;
+      this.#states[name] = true;
+      this[name] = { ...this.#event_defaults }
+    }
+    addEvent(name, normal = ()=>undefined) {
+      this.#event_defaults[name] = normal;
+      for (let state of Object.keys(this.#states))
+        this[state][name] = normal;
+    }
+    call(event, ...args) {
+      return this[this.#state][event](...args);
+    }
+    set(state) {
+      if (!this.#states[state]) return false;
+      this.#state = state;
+      return true;
+    }
+  }
+}
+
+// Limit
+//   Restricting numbers between two values
+//   Clamp, Wrap, Fold and Sigmoid are supported
 
 {
   Elements.Limit = class Limit {
@@ -126,7 +166,8 @@ const Elements = {};
       return N;
     }
     sigmoid(n) {
-      return (this.max-this.min) / (1 + Math.exp(4 * (this.min-n) / (this.max-this.min) + 2)) + this.min;
+      let diff = this.max-this.min;
+      return diff / (1 + Math.exp(4 * (this.min-n) / diff + 2)) + this.min;
     }
   };
   
@@ -154,6 +195,10 @@ const Elements = {};
     return (b - a) / (1 + Math.exp(4 * (a - n) / (b - a) + 2)) + a;
   };
 }
+
+// Meal
+//   Consuming a string
+//   Good for programming languages and syntax highlighting and parsing and such
 
 {
   Elements.Meal = class Meal {

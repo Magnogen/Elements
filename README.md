@@ -36,10 +36,12 @@ const { Colour: col, Meal: lang } = Elements
 
 There are currently 3 parts to this library - each individual and can technically be used on their own, but at the moment they are all in one file.
 
-| Element | Usage                              | Documentation                       |
-| -       | -                                  | -                                   |
-| Colour  | Making colours                     | [`/docs/Colour.md`](docs/Colour.md) |
-| Limit   | Restricting numbers between bounds | [`/docs/Limit.md`](docs/Limit.md)   |
-| Meal    | Consuming strings                  | [`/docs/Meal.md`](docs/Meal.md)     |
+| Element | Usage                                    | Documentation                       |
+| -       | -                                        | -                                   |
+| Colour  | Making colours                           | [`/docs/Colour.md`](docs/Colour.md) |
+| FSM     | Finite State Machine - Speaks for itself | [`/docs/FSM.md`](docs/FSM.md)       |
+| Limit   | Restricting numbers between bounds       | [`/docs/Limit.md`](docs/Limit.md)   |
+| Meal    | Consuming strings                        | [`/docs/Meal.md`](docs/Meal.md)     |
+| Thread  | Multiple things in sort of parallel      | [`/docs/Thread.md`](docs/Thread.md) |
 
 You can find files for any aspect of this library in the `/docs/` folder if you'd like to learn more.
