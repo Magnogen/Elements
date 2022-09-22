@@ -15,7 +15,7 @@ Adds a potential state to the FSM, if its the first one added, it'll set the sta
 ### `(FSM).addEvent(name, default)`
 
 Creates an event and assigns the default.
-This new event is then propogated to all previously made states, and all future ones too.
+This new event is then propagated to all previously made states, and all future ones too.
 
 ### `(FSM).call(event, ...args)`
 
