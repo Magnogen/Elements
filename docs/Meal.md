@@ -1,8 +1,16 @@
 ## Meal
 
-In order to make a meal of a string, pass the string into the `new Elements.Meal(...)` (or just `new Meal(...)`, when installed) constructor. In this new object, it is referred to as the meal's `plate`. 
+```js
+new Meal(string, tokensOnly) // when installed onto the window
+new Elements.Meal(string, tokensOnly=false)
+```
 
-This creates a Meal object that has a few properties - the most notable of which is [`.eat()`](#meal-eat-edible-flags). There are a few more though, and they're listed below.
+In order to make a meal of a string, pass the string into the above constructor.
+In this new object, it is referred to as the meal's `plate`.
+The plate always remains the same, so the meal's `.index` value tells where along the string you are.
+
+The constructor creates a Meal object that has a few properties - the most notable of which is [`.eat()`](#meal-eat-edible-flags).
+There are a few more though, and they are listed below.
 
 ### `(Meal).finished()`
 
@@ -76,9 +84,11 @@ food.eat((copy) => { // this might seem long, but don't worry - I've split it up
 });
 ```
 
-When a function is eaten, it essentially clones the meal itself, and passes that clone as the argument of the function. It then executes it and checks the result of the function.
+When a function like this is eaten, it essentially clones the meal itself, and passes that clone as the argument of the function.
+It then executes it and checks the result of the function.
 
-If the function returns `null`, it disregards the attempt and does nothing, returning `null`. As it passes a clone of the meal, the changes are temporary.
+If the function returns `null`, it disregards the attempt and does nothing, returning `null`.
+As it passes a clone of the meal, the changes are temporary.
 
 If it returns anything else it'll set its own data to the data of the copy, and return the result that the function returns.
 
@@ -95,6 +105,26 @@ This is helpful for doing things like:
 - Eating anything _but_ a string.
 
 - And quite a bit more!
+
+The above function can actually be simplified and made a lot smaller.
+Here is that same code, but using a bunch of "helper functions", that you can learn more about in the next section.
+
+```js
+let food = new Meal('Hello, World!');
+
+// this function would eat any of these
+//   'hello', 'helllo', 'hellllo', etc
+// but not
+//   'helo', 'heo', 'ello', or 'hell'
+
+food.eat(
+  Meal.chain(
+    'hel', // "he", and one "l"
+    Meal.many('l'), // at least one more "l", making it 2+ "l"s
+    'o' // and finally an 'o'
+  )
+);
+```
 
 ### Helper functions
 
@@ -117,6 +147,10 @@ Eats all of the edibles provided, one after the other - like a chain.
 
 Eats the provided edible 1 or more times. _Many_ times, if you will.
 
+#### `Meal.n(edible, amount)`
+
+Eats precisely the amount of `edible`s as specified in `amount`.
+
 #### `Meal.around(edible, before, after)`
 
 > DEPRECATED - see [`Meal.map()`](#meal-map-edible-mapper)
@@ -130,6 +164,14 @@ It is recommended to use `Meal.map()`, (^ link above) as then you can simply pro
 Eats an edible as usual, and if it would return `null`, it does so. Otherwise, it'll pass the result into the `mapper` function, and return its returned value instead. 
 
 Useful for turning things into tokens or sanitising the result into a different format.
+
+#### `Meal.need(edible, error)`
+
+*Has* to eat the `edible`, if it doesn't, it throws an error - it makes a big fuss about it.
+
+`error` can be a string, or a function.
+If its a string it throws that, if its a function it passes the food into it and throws the result.
+This means you can get things like the `.line` and `.column` the process got up to before throwing the error.
 
 #### `Meal.not(edible)`
 
@@ -164,10 +206,11 @@ Like `Meal._`, but it's not optional - writing it out yourself, it'd be `many( a
 Here are some examples for edibles that can be used in certain circumstances. They make use of the helper functions, so you can assume that each snippet starts with this:
 
 ```js
-const { any, chain, many, maybe, not } = Elements.Meal;
+const { any, chain, many, maybe, need, not } = Elements.Meal;
 ```
 
-You can use that to quickly get all the functions out of the Meal namespace. If you want to get more information on it, it's called [Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#object_destructuring).
+You can use that to quickly get all the functions out of the Meal object.
+If you want to get more information on it, it's called [Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#object_destructuring).
 
 The examples are as follows, you can eat them by simply eating the variable the snippet creates:
 
@@ -181,7 +224,7 @@ The examples are as follows, you can eat them by simply eating the variable the 
               '\\"', 
               not( '"' )
           ) ) ),
-          '"'
+          need('"', leftovers => `Error expected ", but received ${leftovers.first()}`)
       )
   )
   ```

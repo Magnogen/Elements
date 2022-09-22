@@ -1,12 +1,19 @@
 ## Limit
 
+```js
+var my_bound = new Limit(low, high) // when installed onto the window
+var my_bound = new Elements.Limit(low, high)
+```
+
+This is one way to make a new "bound", simply put the lower and upper bounds into the constructor and use the functions on it, as you can see below.
+You can also use the functions out-of-the-box as it were, and those examples are put first.
+
 ### Clamp
 
 ```js
 Elements.Limit.clamp(number, low, high)
 Limit.clamp(number, low, high)
 
-const my_bound = new Elements.Limit(low, high)
 my_bound.clamp(number)
 ```
 
@@ -20,7 +27,6 @@ The `clamp()` function returns the number but restricted between `low` and `high
 Elements.Limit.wrap(number, low, high)
 Limit.wrap(number, low, high)
 
-const my_bound = new Elements.Limit(low, high)
 my_bound.wrap(number)
 ```
 
@@ -46,7 +52,6 @@ Limit.awrap(0, 0, 10) // would give 10
 Elements.Limit.fold(number, low, high)
 Limit.fold(number, low, high)
 
-const my_bound = new Elements.Limit(low, high)
 my_bound.fold(number)
 ```
 
@@ -60,7 +65,6 @@ The `fold()` function is like `wrap()`, but is more continuous, and actually pro
 Elements.Limit.sigmoid(number, low, high)
 Limit.sigmoid(number, low, high)
 
-const my_bound = new Elements.Limit(low, high)
 my_bound.sigmoid(number)
 ```
 

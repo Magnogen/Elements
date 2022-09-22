@@ -328,26 +328,36 @@ const Elements = {};
       this.content = generator(this);
       this.complete = false;
       this.task_complete = false;
+      this.waited_a_frame
     }
     start() { threads.push(this); }
   };
   Elements.Thread.frame = Symbol.for('Elements.Thread.frame');
   Elements.Thread.stop = Symbol.for('Elements.Thread.stop');
+  Elements.Thread.waited = Symbol.for('Elements.Thread.waited');
   
   (async () => {
     // forever try and compute threads
     while (true) {
       let last = performance.now();
       // mark every running thread as ready to compute
-      for (let thread of threads) thread.task_complete = false;
+      for (let thread of threads) {
+        thread.task_complete = false;
+        thread.waited_a_frame = true;
+      }
       // compute as many tasks in all threads as possible in a 60th of a second (frame)
       while (performance.now() - last < 1000/60) {
         for (let self of threads) {
           // if there's nothing left of the thread
           // or if it asked to wait 'till the next frame (end of task)
           if (self.complete || self.task_complete) continue;
+          let waited;
+          if (self.waited_a_frame) {
+            waited = Elements.Thread.waited;
+            self.waited_a_frame = false;
+          }
           // compute next part of thread, allowing for async
-          const next = await self.content.next();
+          const next = await self.content.next(waited);
           // generator done means thread is done
           if (next.done)
             self.complete = true;
