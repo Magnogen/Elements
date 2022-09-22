@@ -1,12 +1,12 @@
 # Elements
 
-A JavaScript Library for things I use often, as well as some helper functions. Full documentation below.
+This is a JavaScript Library for things I use often, as well as some helper functions.
 
-Inspired by [Habitat](https://github.com/l2wilson94/Habitat), another library that I help out with!
+Inspired by [Habitat](https://github.com/TodePond/Habitat), another library that I help out with!
 
 ## Installation
 
-You can embed it into the browser like this: (I don't really use Modules, but I can convert this over to one if I ever need it)
+You can embed it into the browser like this: (I don't really use Modules, but I can convert it over to one if anyone wants it)
 
 ```html
 <script src="Elements.js"></script>
@@ -14,19 +14,19 @@ You can embed it into the browser like this: (I don't really use Modules, but I 
 
 ## Usage
 
-You _can_ just use every function out-of-the-box, like so:
+You _can_ use every function out-of-the-box, like so:
 
 ```js
 Elements.Limit.clamp() // or any other function
 ```
 
-But you can also install bits of the library into the global domain. For instance:
+But you can also install bits of the library into the global scope. For instance:
 
 ```js
 const { Colour, Meal } = Elements
 ```
 
-You can also easily rename them to be whatever you like!
+You can also easily rename each part to be whatever you like!
 
 ```js
 const { Colour: col, Meal: lang } = Elements
@@ -34,7 +34,7 @@ const { Colour: col, Meal: lang } = Elements
 
 ## Documentation
 
-There are currently 3 parts to this library - each individual and can technically be used on their own, but at the moment they are all in one file.
+There are currently 5 parts to this library - each individual and can technically be used on their own, but at the moment they are all in one file.
 
 | Element | Usage                                    | Documentation                       |
 | -       | -                                        | -                                   |
