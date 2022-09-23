@@ -1,4 +1,4 @@
-const { Thread, FSM } = Elements;
+const { FSM } = Elements;
 let rng = new FSM()
 
 rng.addState('start')
