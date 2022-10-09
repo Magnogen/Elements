@@ -223,6 +223,9 @@ const Elements = {};
       if (typeof check == 'undefined')
         return this.plate[this.index];
     }
+    leftover() {
+      return this.plate.substring(this.index, this.plate.length);
+    }
     eat(edible, tokensOnly=this.tokensOnly) {
       if (typeof edible == 'string') {
         if (!this.first(edible)) return null;
@@ -269,10 +272,11 @@ const Elements = {};
     return food.tokensOnly ? content : content.join('');
   }
   Elements.Meal.many = edible => food => {
-    let content = [], current = food.eat(edible);
-    while (current != null) {
-      content.push(current);
+    let content = [], current;
+    while (true) {
       current = food.eat(edible);
+      if (current === null) return null;
+      content.push(current);
     }
     if (content.length == 0) return null;
     return food.tokensOnly ? content : content.join('');
@@ -284,11 +288,11 @@ const Elements = {};
     return mapper(value);
   };
   Elements.Meal.n = (edible, amount) => food => {
-    let content = [], current = food.eat(edible);
+    let content = [], current;
     for (let i = 0; i < amount; i++) {
+      current = food.eat(edible);
       if (current === null) return null;
       content.push(current);
-      current = food.eat(edible);
     }
     return food.tokensOnly ? content : content.join('');
   }
